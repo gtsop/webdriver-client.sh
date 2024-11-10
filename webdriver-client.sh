@@ -98,11 +98,29 @@ back() {
     http_post "$endpoint_url"/session/"$session_id"/back
 }
 
-# 10.3 Forward
+# 10.4 Forward
 #
 forward() {
     endpoint_url=$1;
     session_id=$2
 
     http_post "$endpoint_url"/session/"$session_id"/forward
+}
+
+# 10.5 Refresh
+#
+refresh() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/refresh
+}
+
+# 10.6 Get Title
+#
+get_title() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_get "$endpoint_url"/session/"$session_id"/title
 }

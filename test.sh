@@ -26,5 +26,9 @@ forward http://localhost:4444 "$session_id"; echo "";
 
 get_current_url http://localhost:4444 "$session_id"; echo "";
 
+refresh http://localhost:4444 "$session_id"; echo "";
+
+get_title http://localhost:4444 "$session_id"; echo "";
+
 delete_session http://localhost:4444 "$session_id"; echo "";
 
