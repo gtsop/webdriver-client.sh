@@ -16,6 +16,10 @@ http_post() {
     url=$1
     data=$2
 
+    if [ -z "$data" ]; then
+        data="{}"
+    fi
+
     wget -q -O - --header="Content-Type: application/json" --post-data="$data" "$url"
 }
 
@@ -76,4 +80,20 @@ navigate_to() {
     http_post "$endpoint_url"/session/"$session_id"/url "$payload"
 }
 
+# 10.2 Get Current URL
+#
+get_current_url() {
+    endpoint_url=$1;
+    session_id=$2
 
+    http_get "$endpoint_url"/session/"$session_id"/url
+}
+
+# 10.3 Back
+#
+back() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/back
+}
