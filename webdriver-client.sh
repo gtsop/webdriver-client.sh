@@ -152,3 +152,39 @@ switch_window() {
 
     http_post "$endpoint_url"/session/"$session_id"/window "$payload"
 }
+
+# 11.4 Get Window Handles
+#
+get_window_handles() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_get "$endpoint_url"/session/"$session_id"/window/handles
+}
+
+# 11.5 New Window
+#
+new_window() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/window/new
+}
+
+# 11.6 Switch To Frame
+#
+switch_to_frame() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/frame "$payload"
+}
+
+# 11.7 Switch To Parent Frame
+switch_to_parent_frame() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/frame/parent
+}
