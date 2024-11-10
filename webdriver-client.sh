@@ -124,3 +124,31 @@ get_title() {
 
     http_get "$endpoint_url"/session/"$session_id"/title
 }
+
+# 11.1 Get Window Handle
+#
+get_window_handle() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_get "$endpoint_url"/session/"$session_id"/window
+}
+
+# 11.2 Close Window
+#
+close_window() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_delete "$endpoint_url"/session/"$session_id"/window
+}
+
+# 11.3 Switch Window
+#
+switch_window() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/window "$payload"
+}
