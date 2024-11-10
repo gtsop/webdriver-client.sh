@@ -97,3 +97,12 @@ back() {
 
     http_post "$endpoint_url"/session/"$session_id"/back
 }
+
+# 10.3 Forward
+#
+forward() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/forward
+}

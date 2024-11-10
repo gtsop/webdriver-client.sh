@@ -16,13 +16,13 @@ get_timeouts http://localhost:4444 "$session_id"; echo "";
 
 navigate_to http://localhost:4444 "$session_id" '{"url":"https://www.gnu.org"}'; echo "";
 
-get_current_url http://localhost:4444 "$session_id"; echo "";
-
 navigate_to http://localhost:4444 "$session_id" '{"url":"https://www.gnu.org/gnu/gnu.html"}'; echo "";
 
+back http://localhost:4444 "$session_id"; echo "";
+
 get_current_url http://localhost:4444 "$session_id"; echo "";
 
-back http://localhost:4444 "$session_id"; echo "";
+forward http://localhost:4444 "$session_id"; echo "";
 
 get_current_url http://localhost:4444 "$session_id"; echo "";
 
