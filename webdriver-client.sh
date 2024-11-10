@@ -66,15 +66,14 @@ set_timeouts() {
     http_post "$endpoint_url"/session/"$session_id"/timeouts "$payload"
 }
 
-status http://localhost:4444
+# 10.1 Navigate To
+#
+navigate_to() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
 
-response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
+    http_post "$endpoint_url"/session/"$session_id"/url "$payload"
+}
 
-session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
-
-set_timeouts http://localhost:4444 "$session_id" '{"script":1, "pageLoad":2, "implicit":3}'
-
-get_timeouts http://localhost:4444 "$session_id"
-
-delete_session http://localhost:4444 "$session_id"
 
