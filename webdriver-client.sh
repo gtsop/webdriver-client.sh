@@ -1,5 +1,24 @@
 #!/usr/bin/env sh
 
+http_delete() {
+    url=$1
+
+    wget -q -O - --method=delete "$url"
+}
+
+http_get() {
+    url=$1
+
+    wget -q -O - "$url"
+}
+
+http_post() {
+    url=$1
+    data=$2
+
+    wget -q -O - --header="Content-Type: application/json" --post-data="$data" "$url"
+}
+
 # 8.2 New Session
 #
 
@@ -7,7 +26,7 @@ new_session() {
     endpoint_url=$1;
     payload=$2
 
-    wget -q -O - --header="Content-Type: application/json" --post-data="$payload" "$endpoint_url"/session
+    http_post "$endpoint_url"/session "$payload"
 }
 
 # 8.3 Delete Session
@@ -17,7 +36,7 @@ delete_session() {
     endpoint_url=$1;
     session_id=$2
 
-    wget -q -O - --method=delete "$endpoint_url"/session/"$session_id"
+    http_delete "$endpoint_url"/session/"$session_id"
 }
 
 # 8.4 Status
@@ -25,7 +44,7 @@ delete_session() {
 status() {
     endpoint_url=$1;
 
-    wget -q -O - "$endpoint_url"/status
+    http_get "$endpoint_url"/status
 }
 
 # 9.1 Get Timeouts
@@ -34,7 +53,7 @@ get_timeouts() {
     endpoint_url=$1;
     session_id=$2
 
-    wget -q -O - "$endpoint_url"/session/"$session_id"/timeouts
+    http_get "$endpoint_url"/session/"$session_id"/timeouts
 }
 
 # 9.2 Set Timeouts
@@ -44,7 +63,7 @@ set_timeouts() {
     session_id=$2
     payload=$3
 
-    wget -q -O - --header="Content-Type: application/json" --post-data="$payload" "$endpoint_url"/session/"$session_id"/timeouts
+    http_post "$endpoint_url"/session/"$session_id"/timeouts "$payload"
 }
 
 status http://localhost:4444
