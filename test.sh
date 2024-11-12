@@ -47,6 +47,13 @@ echo ""
 echo "==== 11. Contexts"
 echo ""
 
+
+set_window_rect http://localhost:4444 "$session_id" '{"x":100,"y":50,"width":500,"height":500}'; echo ""
+get_window_rect http://localhost:4444 "$session_id"; echo ""
+maximize_window http://localhost:4444 "$session_id"; echo ""
+minimize_window http://localhost:4444 "$session_id"; echo ""
+fullscreen_window http://localhost:4444 "$session_id"; echo ""
+
 switch_to_frame http://localhost:4444 "$session_id" '{"id": null}'; echo ""
 switch_to_parent_frame http://localhost:4444 "$session_id"; echo ""
 

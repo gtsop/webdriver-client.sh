@@ -182,9 +182,57 @@ switch_to_frame() {
 }
 
 # 11.7 Switch To Parent Frame
+#
 switch_to_parent_frame() {
     endpoint_url=$1;
     session_id=$2
 
     http_post "$endpoint_url"/session/"$session_id"/frame/parent
+}
+
+# 11.8.1 Get Window Rect
+#
+get_window_rect() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_get "$endpoint_url"/session/"$session_id"/window/rect
+}
+
+
+# 11.8.2 Set Window Rect
+#
+set_window_rect() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/window/rect "$payload"
+}
+
+# 11.8.3 Maximize Window 
+#
+maximize_window() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/window/maximize
+}
+
+# 11.8.4 Minimize Window 
+#
+minimize_window() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/window/minimize
+}
+
+# 11.8.5 Fullscreen Window 
+#
+fullscreen_window() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_post "$endpoint_url"/session/"$session_id"/window/fullscreen
 }
