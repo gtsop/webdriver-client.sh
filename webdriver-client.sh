@@ -236,3 +236,23 @@ fullscreen_window() {
 
     http_post "$endpoint_url"/session/"$session_id"/window/fullscreen
 }
+
+# 12.3.2 Find Element
+#
+find_element() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/element "$payload"
+}
+
+# 12.3.3 Find Elements
+#
+find_elements() {
+    endpoint_url=$1;
+    session_id=$2
+    payload=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/elements "$payload"
+}
