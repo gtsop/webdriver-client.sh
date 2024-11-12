@@ -13,8 +13,14 @@ session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
 
 navigate_to http://localhost:4444 "$session_id" '{"url":"https://www.gnu.org"}'; echo "";
 
-find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":".first"}'; echo ""
 find_elements http://localhost:4444 "$session_id" '{"using":"css selector", "value":"a"}'; echo ""
+
+response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"#navigation"}');
+echo "$response"
+element_id=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+
+find_element_from_element http://localhost:4444 "$session_id" "$element_id" '{"using":"css selector", "value":"ul"}'; echo ""
+find_elements_from_element http://localhost:4444 "$session_id" "$element_id" '{"using":"css selector", "value":"a"}'; echo ""
 
 delete_session http://localhost:4444 "$session_id"; echo "";
 

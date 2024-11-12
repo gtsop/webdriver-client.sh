@@ -256,3 +256,67 @@ find_elements() {
 
     http_post "$endpoint_url"/session/"$session_id"/elements "$payload"
 }
+
+# 12.3.4 Find Element From Element
+#
+find_element_from_element() {
+    endpoint_url=$1;
+    session_id=$2
+    element_id=$3
+    payload=$4
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/element "$payload"
+}
+
+# 12.3.5 Find Elements From Element
+#
+find_elements_from_element() {
+    endpoint_url=$1;
+    session_id=$2
+    element_id=$3
+    payload=$4
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/elements "$payload"
+
+}
+
+# 12.3.6 Find Element From Shadow Root
+#
+find_element_from_shadow_root() {
+    endpoint_url=$1;
+    session_id=$2
+    shadow_id=$3
+    payload=$4
+
+    http_post "$endpoint_url"/session/"$session_id"/shadow/"$shadow_id"/element "$payload"
+}
+
+# 12.3.7 Find Elements From Shadow Root
+#
+find_elements_from_shadow_root() {
+    endpoint_url=$1;
+    session_id=$2
+    shadow_id=$3
+    payload=$4
+
+    http_post "$endpoint_url"/session/"$session_id"/shadow/"$shadow_id"/elements "$payload"
+}
+
+# 12.3.8 Get Active Element
+#
+get_active_element() {
+    endpoint_url=$1;
+    session_id=$2
+
+    http_get "$endpoint_url"/session/"$session_id"/element/active
+}
+
+# 12.3.9 Get Element Shadow Root
+#
+get_element_shadow_root() {
+    endpoint_url=$1;
+    session_id=$2
+    element_id=$3
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/shadow "$payload"
+}
