@@ -1,15 +1,38 @@
 #!/usr/bin/env sh
 
+http_wget_catch_error() {
+    # Wget exit status codes manual:
+    # https://www.gnu.org/software/wget/manual/html_node/Exit-Status.html
+    #
+    url=$1
+    method=$2
+    exit_code=$3
+
+    error_prefix="$method $url - wget error ($exit_code)  "
+
+    if [ "$exit_code" = "4" ]; then
+        echo "$error_prefix" "Network failure" >&2
+        exit
+    elif [ "$exit_code" = "8" ]; then
+        echo "$error_prefix" "Server issued an error response" >&2
+        exit
+    fi
+}
+
 http_delete() {
     url=$1
 
     wget -q -O - --method=delete "$url"
+
+    http_wget_catch_error "$url" "DELETE" "$?"
 }
 
 http_get() {
     url=$1
 
     wget -q -O - "$url"
+
+    http_wget_catch_error "$url" "GET" "$?"
 }
 
 http_post() {
@@ -21,6 +44,8 @@ http_post() {
     fi
 
     wget -q -O - --header="Content-Type: application/json" --post-data="$data" "$url"
+
+    http_wget_catch_error "$url" "POST" "$?"
 }
 
 # 8.2 New Session
@@ -320,3 +345,7 @@ get_element_shadow_root() {
 
     http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/shadow "$payload"
 }
+
+# 12.4.1 Is Element Selected
+#
+
