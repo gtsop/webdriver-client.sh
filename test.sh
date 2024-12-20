@@ -33,56 +33,56 @@ done
 
 ######################################################################
 
-#echo -n "[TEST] 8. Sessions - 8.2 New Session"
-#response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
-#session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
-#if [ -z $session_id ]; then
-#    echo " FAIL"
-#    exit
-#fi
-#echo " OK"
-#
-#echo -n "[TEST] 8. Sessions - 8.3 Delete Session"
-#response=$( delete_session http://localhost:4444 "$session_id")
-#value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
-#if [ "$value" != "null" ]; then
-#    echo " FAIL"
-#    exit
-#fi
-#echo " OK"
-#
-#echo -n "[TEST] 8. Sessions - 8.4 Status"
-#response=$(status "http://localhost:4444")
-#is_ready=$(echo "$response" | sed 's/.*"ready":\(true\|false\).*/\1/g')
-#if [ "$is_ready" != "true" ]; then
-#    echo " FAIL"
-#    exit
-#fi
-#echo " OK"
-#
-#echo -n "[TEST] 9. Sessions - 9.1 Get Timeouts"
-#response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
-#session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
-#response=$(set_timeouts http://localhost:4444 "$session_id" '{"script":9999}')
-#response=$(get_timeouts http://localhost:4444 "$session_id")
-#script_timeout=$(echo "$response" | sed 's/.*"script":\([0-9]\+\).*/\1/g')
-#if [ "$script_timeout" != "9999" ]; then
-#    echo " FAIL"
-#    exit
-#fi
-#echo " OK"
-#
-#echo -n "[TEST] 9. Sessions - 9.2 Set Timeouts"
-#response=$(set_timeouts http://localhost:4444 "$session_id" '{"script":9999}')
-#response=$(get_timeouts http://localhost:4444 "$session_id")
-#script_timeout=$(echo "$response" | sed 's/.*"script":\([0-9]\+\).*/\1/g')
-#if [ "$script_timeout" != "9999" ]; then
-#    echo " FAIL"
-#    exit
-#fi
-#echo " OK"
+echo -n "[TEST] 8. Sessions - 8.2 New Session"
+response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
+session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
+if [ -z $session_id ]; then
+    echo " FAIL"
+    exit
+fi
+echo " OK"
 
-create_session
+echo -n "[TEST] 8. Sessions - 8.3 Delete Session"
+response=$( delete_session http://localhost:4444 "$session_id")
+value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+if [ "$value" != "null" ]; then
+    echo " FAIL"
+    exit
+fi
+echo " OK"
+
+echo -n "[TEST] 8. Sessions - 8.4 Status"
+response=$(status "http://localhost:4444")
+is_ready=$(echo "$response" | sed 's/.*"ready":\(true\|false\).*/\1/g')
+if [ "$is_ready" != "true" ]; then
+    echo " FAIL"
+    exit
+fi
+echo " OK"
+
+echo -n "[TEST] 9. Sessions - 9.1 Get Timeouts"
+response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
+session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
+response=$(set_timeouts http://localhost:4444 "$session_id" '{"script":9999}')
+response=$(get_timeouts http://localhost:4444 "$session_id")
+script_timeout=$(echo "$response" | sed 's/.*"script":\([0-9]\+\).*/\1/g')
+if [ "$script_timeout" != "9999" ]; then
+    echo " FAIL"
+    exit
+fi
+echo " OK"
+
+echo -n "[TEST] 9. Sessions - 9.2 Set Timeouts"
+response=$(set_timeouts http://localhost:4444 "$session_id" '{"script":9999}')
+response=$(get_timeouts http://localhost:4444 "$session_id")
+script_timeout=$(echo "$response" | sed 's/.*"script":\([0-9]\+\).*/\1/g')
+if [ "$script_timeout" != "9999" ]; then
+    echo " FAIL"
+    exit
+fi
+echo " OK"
+
+#create_session
 
 echo -n "[TEST] 10. Navigation - 10.1 Navigate To"
 response=$(navigate_to http://localhost:4444 "$session_id" "{\"url\":\"file://$(pwd)/index.html\"}")
