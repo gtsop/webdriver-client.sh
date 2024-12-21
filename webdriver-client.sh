@@ -168,9 +168,9 @@ close_window() {
     http_delete "$endpoint_url"/session/"$session_id"/window
 }
 
-# 11.3 Switch Window
+# 11.3 Switch To Window
 #
-switch_window() {
+switch_to_window() {
     endpoint_url=$1;
     session_id=$2
     payload=$3
