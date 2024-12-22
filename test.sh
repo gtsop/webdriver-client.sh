@@ -371,6 +371,24 @@ test_is_element_enabled() {
     [ "$value" = "true" ]
 }
 
+test_get_computed_role() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_computed_role http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "paragraph" ]
+}
+
+test_get_computed_label() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"input"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_computed_label http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "First Name" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -412,4 +430,6 @@ test_is_element_enabled() {
 create_session; visit_index
 test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
 test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
+test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
+test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
 

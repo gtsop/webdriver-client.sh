@@ -428,3 +428,23 @@ is_element_enabled() {
 
     http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/enabled
 }
+
+# 12.4.9 Get Computed Role
+#
+get_computed_role() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/computedrole
+}
+
+# 12.4.10 Get Computed Label
+#
+get_computed_label() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/computedlabel
+}
