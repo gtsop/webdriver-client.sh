@@ -398,3 +398,33 @@ get_element_text() {
 
     http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/text
 }
+
+# 12.4.6 Get Element Tag Name
+#
+get_element_tag_name() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/name
+}
+
+# 12.4.7 Get Element Rect
+#
+get_element_rect() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/rect
+}
+
+# 12.4.8 Is Element Enabled
+#
+is_element_enabled() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/enabled
+}

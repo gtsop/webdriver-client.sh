@@ -344,6 +344,33 @@ test_get_element_text() {
     [ "$value" = "hello world" ]
 }
 
+test_get_element_tag_name() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_element_tag_name http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "p" ]
+}
+
+test_get_element_rect() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_element_rect http://localhost:4444 "$session_id" "$element")
+    height=$(echo "$response" | sed 's/.*"height":\([0-9.]\+\).*/\1/g')
+
+    [ "$height" = "22.0" ]
+}
+
+test_is_element_enabled() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(is_element_enabled http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":\(true\|false\).*/\1/g')
+
+    [ "$value" = "true" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -375,11 +402,14 @@ test_get_element_text() {
 #test "12. Elements - 12.3.5 Find Elements From Element" test_find_elements_from_element
 #test "12. Elements - 12.3.6 Find Element From Shadow Root" test_find_element_from_shadow_root
 #test "12. Elements - 12.3.7 Find Elements From Shadow Root" test_find_elements_from_shadow_root
+#test "12. Elements - 12.3.8 Get Active Element" test_get_active_element
+#test "12. Elements - 12.4.1 Is Element Selected" test_is_element_selected
+#test "12. Elements - 12.4.2 Get Element Attribute" test_get_element_attribute
+#test "12. Elements - 12.4.3 Get Element Property" test_get_element_property
+#test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
+#test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
+#test "12. Elements - 12.4.6 Get Element Tag Name" test_get_element_tag_name
 create_session; visit_index
-test "12. Elements - 12.3.8 Get Active Element" test_get_active_element
-test "12. Elements - 12.4.1 Is Element Selected" test_is_element_selected
-test "12. Elements - 12.4.2 Get Element Attribute" test_get_element_attribute
-test "12. Elements - 12.4.3 Get Element Property" test_get_element_property
-test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
-test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
+test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
+test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
 
