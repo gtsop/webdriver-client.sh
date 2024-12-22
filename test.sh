@@ -413,6 +413,27 @@ test_element_send_keys() {
     [ "$value" = "null" ]
 }
 
+test_get_page_source() {
+    response=$(get_page_source http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ -n "$value" ]
+}
+
+test_execute_script() {
+    response=$(execute_script http://localhost:4444 "$session_id" '{"script":"return \"hello\";","args":[]}')
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "hello" ]
+}
+
+test_execute_async_script() {
+    response=$(execute_async_script http://localhost:4444 "$session_id" '{"script":"const cb = arguments[arguments.length - 1]; cb(\"hello\");","args":[]}')
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "hello" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -451,12 +472,16 @@ test_element_send_keys() {
 #test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
 #test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
 #test "12. Elements - 12.4.6 Get Element Tag Name" test_get_element_tag_name
+#test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
+#test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
+#test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
+#test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
+#test "12. Elements - 12.5.1 Element Click" test_element_click
+#test "12. Elements - 12.5.2 Element Clear" test_element_clear
+#test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
 create_session; visit_index
-test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
-test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
-test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
-test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
-test "12. Elements - 12.5.1 Element Click" test_element_click
-test "12. Elements - 12.5.2 Element Clear" test_element_clear
-test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
+
+test "13. Document - 13.1 Get Page Source" test_get_page_source
+test "13. Document - 13.2.1 Execute Script" test_execute_script
+test "13. Document - 13.2.2 Execute Async Script" test_execute_async_script
 

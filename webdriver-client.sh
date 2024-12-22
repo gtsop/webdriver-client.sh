@@ -479,3 +479,32 @@ element_send_keys() {
 
     http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/value "$payload"
 }
+
+# 13.1 Get Page Source
+#
+get_page_source() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_get "$endpoint_url"/session/"$session_id"/source
+}
+
+# 13.2.1 Execute Script
+#
+execute_script() {
+    endpoint_url=$1;
+    session_id=$2;
+    payload=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/execute/sync "$payload"
+}
+
+# 13.2.2 Execute Async Script 
+#
+execute_async_script() {
+    endpoint_url=$1;
+    session_id=$2;
+    payload=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/execute/async "$payload"
+}
