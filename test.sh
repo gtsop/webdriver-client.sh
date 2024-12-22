@@ -389,6 +389,30 @@ test_get_computed_label() {
     [ "$value" = "First Name" ]
 }
 
+test_element_click() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"input"}')
+    response=$(element_click http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
+test_element_clear() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"input"}')
+    response=$(element_clear http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
+test_element_send_keys() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"input"}')
+    response=$(element_send_keys http://localhost:4444 "$session_id" "$element" '{"text":"foo"}')
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -432,4 +456,7 @@ test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
 test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
 test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
 test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
+test "12. Elements - 12.5.1 Element Click" test_element_click
+test "12. Elements - 12.5.2 Element Clear" test_element_clear
+test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
 

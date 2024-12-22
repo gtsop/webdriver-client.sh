@@ -448,3 +448,34 @@ get_computed_label() {
 
     http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/computedlabel
 }
+
+# 12.5.1 Element Click
+#
+element_click() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/click
+}
+
+# 12.5.2 Element Clear
+#
+element_clear() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/clear
+}
+
+# 12.5.3 Element Send Keys
+#
+element_send_keys() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+    payload=$4;
+
+    http_post "$endpoint_url"/session/"$session_id"/element/"$element_id"/value "$payload"
+}
