@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+    <main>
+        <a href="#foo">Foo</a>
+        <p id="text">text</p>
+    </main>
+    <section>
+
+    </section>
+    <script>
+        const section = document.querySelector('section')
+        const shadow = section.attachShadow({ mode: 'open' })
+        const span = document.createElement('span');
+        span.textContent = 'shadow span';
+        shadow.appendChild(span);
+    </script>
+</body>
+
