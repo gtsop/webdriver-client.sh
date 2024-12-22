@@ -357,7 +357,7 @@ is_element_selected() {
 }
 
 # 12.4.2 Get Element Attribute
-# 
+#
 get_element_attribute() {
     endpoint_url=$1;
     session_id=$2;
@@ -365,4 +365,36 @@ get_element_attribute() {
     attribute=$4;
 
     http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/attribute/"$attribute"
+}
+
+# 12.4.3 Get Element Property
+#
+get_element_property() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+    property=$4;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/property/"$property"
+}
+
+# 12.4.4 Get Element CSS Value
+#
+get_element_css_value() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+    css_property=$4;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/css/"$css_property"
+}
+
+# 12.4.5 Get Element Text
+#
+get_element_text() {
+    endpoint_url=$1;
+    session_id=$2;
+    element_id=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/element/"$element_id"/text
 }

@@ -317,6 +317,33 @@ test_get_element_attribute() {
     [ "$value" = "text" ]
 }
 
+test_get_element_property() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_element_property http://localhost:4444 "$session_id" "$element" textContent)
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "hello world" ]
+}
+
+test_get_element_css_value() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_element_css_value http://localhost:4444 "$session_id" "$element" color)
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "rgb(0, 0, 0)" ]
+}
+
+test_get_element_text() {
+    response=$(find_element http://localhost:4444 "$session_id" '{"using":"css selector", "value":"p"}')
+    element=$(echo "$response" | sed 's/.*"element-.[^"]*":"\(.[^"]*\)".*/\1/g')
+    response=$(get_element_text http://localhost:4444 "$session_id" "$element")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    [ "$value" = "hello world" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -352,4 +379,7 @@ create_session; visit_index
 test "12. Elements - 12.3.8 Get Active Element" test_get_active_element
 test "12. Elements - 12.4.1 Is Element Selected" test_is_element_selected
 test "12. Elements - 12.4.2 Get Element Attribute" test_get_element_attribute
+test "12. Elements - 12.4.3 Get Element Property" test_get_element_property
+test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
+test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
 
