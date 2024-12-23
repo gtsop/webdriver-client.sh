@@ -43,7 +43,7 @@ http_post() {
         data="{}"
     fi
 
-    wget -q -O - --header="Content-Type: application/json" --post-data="$data" "$url"
+    wget -q --content-on-error -O - --header="Content-Type: application/json" --post-data="$data" "$url"
 
     http_wget_catch_error "$url" "POST" "$?"
 }
@@ -507,4 +507,55 @@ execute_async_script() {
     payload=$3;
 
     http_post "$endpoint_url"/session/"$session_id"/execute/async "$payload"
+}
+
+# 14.1 Get All Cookies
+#
+get_all_cookies() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_get "$endpoint_url"/session/"$session_id"/cookie
+}
+
+# 14.2 Get Named Cookie
+#
+get_named_cookie() {
+    endpoint_url=$1;
+    session_id=$2;
+    name=$3;
+
+    http_get "$endpoint_url"/session/"$session_id"/cookie/"$name"
+}
+
+# 14.3 Add Cookie
+#
+add_cookie() {
+    endpoint_url=$1;
+    session_id=$2;
+    payload=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/cookie "$payload"
+}
+
+
+##### TODO COOKIES
+
+# 15.7 Perform Actions
+#
+perform_actions() {
+    endpoint_url=$1;
+    session_id=$2;
+    payload=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/actions "$payload"
+}
+
+# 15.8 Release Actions
+#
+release_actions() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_delete "$endpoint_url"/session/"$session_id"/actions
 }

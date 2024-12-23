@@ -434,6 +434,45 @@ test_execute_async_script() {
     [ "$value" = "hello" ]
 }
 
+test_get_all_cookies() {
+    response=$(get_all_cookies http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\[\(.*\)\].*/\1/g')
+
+    [ "$value" = "" ]
+}
+
+test_get_named_cookie() {
+    response=$(add_cookie http://localhost:4444 "$session_id" '{"cookie":{"name":"foo","value":"bar"}}')
+    echo $response
+    response=$(get_named_cookie http://localhost:4444 "$session_id" "foo")
+    echo $response
+    value=$(echo "$response" | sed 's/.*"value":\[\(.*\)\].*/\1/g')
+
+    [ "$value" = "" ]
+}
+
+test_add_cookie() {
+    response=$(add_cookie http://localhost:4444 "$session_id" '{"cookie":{"name":"foo","value":"bar","path":"/","secure":false,"httpOnly":false}}')
+    echo $response
+    value=$(echo "$response" | sed 's/.*"value":\[\(.*\)\].*/\1/g')
+
+    [ "$value" = "" ]
+}
+
+test_perform_actions() {
+    response=$(perform_actions http://localhost:4444 "$session_id" '{"actions":[]}')
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
+test_release_actions() {
+    response=$(release_actions http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
 #test "8. Sessions - 8.2 New Session"  test_new_session
 #test "8. Sessions - 8.3 Delete Session"  test_delete_session
 #test "8. Sessions - 8.4 Status"  test_status
@@ -479,9 +518,24 @@ test_execute_async_script() {
 #test "12. Elements - 12.5.1 Element Click" test_element_click
 #test "12. Elements - 12.5.2 Element Clear" test_element_clear
 #test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
+#test "13. Document - 13.1 Get Page Source" test_get_page_source
+#test "13. Document - 13.2.1 Execute Script" test_execute_script
+#test "13. Document - 13.2.2 Execute Async Script" test_execute_async_script
+#test "14. Cookies - 14.1 Get All Cookies" test_get_all_cookies
+#test "14. Cookies - 14.2 Get Named Cookie" test_get_named_cookie
+#test "14. Cookies - 14.3 Add Cookie" test_add_cookie
+
 create_session; visit_index
 
-test "13. Document - 13.1 Get Page Source" test_get_page_source
-test "13. Document - 13.2.1 Execute Script" test_execute_script
-test "13. Document - 13.2.2 Execute Async Script" test_execute_async_script
+test "15. Actions - 15.7 Perform Actions" test_perform_actions
+test "15. Actions - 15.8 Release Actions" test_release_actions
+
+
+
+
+
+
+
+
+
 
