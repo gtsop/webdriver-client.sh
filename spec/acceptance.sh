@@ -1,8 +1,7 @@
 #!/usr/bin/env sh
+cd "$(dirname "$0")" || exit 1
 
-./check.sh
-
-. ./webdriver-client.sh
+. ../src/webdriver-client.sh
 
 # Kill existing instances
 pkill -f "geckodriver.*--port 4444"

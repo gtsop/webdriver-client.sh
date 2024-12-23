@@ -1,0 +1,9 @@
+# webdriver-client.sh
+
+A POSIX shell compliant implementation of a webdriver client according to spec:
+
+https://w3c.github.io/webdriver
+
+2 depedencies: an `sh` and `wget`
+
+The `webdriver-client.sh` script exposes a helper function for every endpoint described in the spec
