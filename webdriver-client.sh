@@ -559,3 +559,40 @@ release_actions() {
 
     http_delete "$endpoint_url"/session/"$session_id"/actions
 }
+
+# 16.2 Dismiss Alert
+#
+dismiss_alert() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_post "$endpoint_url"/session/"$session_id"/alert/dismiss
+}
+
+# 16.3 Accept Alert
+#
+accept_alert() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_post "$endpoint_url"/session/"$session_id"/alert/accept
+}
+
+# 16.4 Get Alert Text
+#
+get_alert_text() {
+    endpoint_url=$1;
+    session_id=$2;
+
+    http_get "$endpoint_url"/session/"$session_id"/alert/text
+}
+
+# 16.5 Send Alert Text
+#
+send_alert_text() {
+    endpoint_url=$1;
+    session_id=$2;
+    payload=$3;
+
+    http_post "$endpoint_url"/session/"$session_id"/alert/text "$payload"
+}

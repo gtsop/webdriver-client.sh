@@ -473,62 +473,96 @@ test_release_actions() {
     [ "$value" = "null" ]
 }
 
-#test "8. Sessions - 8.2 New Session"  test_new_session
-#test "8. Sessions - 8.3 Delete Session"  test_delete_session
-#test "8. Sessions - 8.4 Status"  test_status
-#create_session
-#test "9. Sessions - 9.1 Get Timeouts"  test_get_timeouts
-#test "9. Sessions - 9.2 Set Timeouts"  test_set_timeouts
-#test "10. Navigation - 10.1 Navigate To" test_navigate_to
-#test "10. Navigation - 10.2 Get Current URL" test_get_current_url
-#test "10. Navigation - 10.3 Back" test_back
-#test "10. Navigation - 10.4 Forward" test_forward
-#test "10. Navigation - 10.5 Refresh" test_refresh
-#test "10. Navigation - 10.6 Get Title" test_get_title
-#test "11. Contexts - 11.1 Get Window Handle" test_get_window_handle
-#test "11. Contexts - 11.2 Close Window" test_close_window
-#create_session
-#test "11. Contexts - 11.3 Switch To Window" test_switch_to_window
-#test "11. Contexts - 11.4 Get Window Handles" test_get_window_handles
-#test "11. Contexts - 11.5 New Window" test_new_window
-#test "11. Contexts - 11.6 Switch To Frame" test_switch_to_frame
-#test "11. Contexts - 11.7 Switch To Parent Frame" test_switch_to_parent_frame
-#test "11. Contexts - 11.8.1 Get Window Rect" test_get_window_rect
-#test "11. Contexts - 11.8.2 Set Window Rect" test_set_window_rect
-#test "11. Contexts - 11.8.3 Maximize Window" test_maximize_window
-#test "11. Contexts - 11.8.4 Minimize Window" test_minimize_window
-#test "11. Contexts - 11.8.5 Fullscreen Window" test_fullscreen_window
-#test "12. Elements - 12.3.2 Find Element" test_find_element
-#test "12. Elements - 12.3.3 Find Elements" test_find_elements
-#test "12. Elements - 12.3.4 Find Element From Element" test_find_element_from_element
-#test "12. Elements - 12.3.5 Find Elements From Element" test_find_elements_from_element
-#test "12. Elements - 12.3.6 Find Element From Shadow Root" test_find_element_from_shadow_root
-#test "12. Elements - 12.3.7 Find Elements From Shadow Root" test_find_elements_from_shadow_root
-#test "12. Elements - 12.3.8 Get Active Element" test_get_active_element
-#test "12. Elements - 12.4.1 Is Element Selected" test_is_element_selected
-#test "12. Elements - 12.4.2 Get Element Attribute" test_get_element_attribute
-#test "12. Elements - 12.4.3 Get Element Property" test_get_element_property
-#test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
-#test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
-#test "12. Elements - 12.4.6 Get Element Tag Name" test_get_element_tag_name
-#test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
-#test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
-#test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
-#test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
-#test "12. Elements - 12.5.1 Element Click" test_element_click
-#test "12. Elements - 12.5.2 Element Clear" test_element_clear
-#test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
-#test "13. Document - 13.1 Get Page Source" test_get_page_source
-#test "13. Document - 13.2.1 Execute Script" test_execute_script
-#test "13. Document - 13.2.2 Execute Async Script" test_execute_async_script
-#test "14. Cookies - 14.1 Get All Cookies" test_get_all_cookies
-#test "14. Cookies - 14.2 Get Named Cookie" test_get_named_cookie
-#test "14. Cookies - 14.3 Add Cookie" test_add_cookie
+test_dismiss_alert() {
+    response=$(execute_script http://localhost:4444 "$session_id" '{"script":"alert(\"hi\")", "args": []}')
+    response=$(dismiss_alert http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
 
-create_session; visit_index
+    [ "$value" = "null" ]
+}
 
+test_accept_alert() {
+    response=$(execute_script http://localhost:4444 "$session_id" '{"script":"alert(\"hi\")", "args": []}')
+    response=$(accept_alert http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
+test_get_alert_text() {
+    response=$(execute_script http://localhost:4444 "$session_id" '{"script":"alert(\"hi\")", "args": []}')
+    response=$(get_alert_text http://localhost:4444 "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+    response=$(dismiss_alert http://localhost:4444 "$session_id")
+
+    [ "$value" = "hi" ]
+}
+
+test_send_alert_text() {
+    response=$(execute_script http://localhost:4444 "$session_id" '{"script":"prompt(\"hi\")", "args": []}')
+    response=$(send_alert_text http://localhost:4444 "$session_id" '{"text":"hi"}')
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    [ "$value" = "null" ]
+}
+
+test "8. Sessions - 8.2 New Session"  test_new_session
+test "8. Sessions - 8.3 Delete Session"  test_delete_session
+test "8. Sessions - 8.4 Status"  test_status
+create_session
+test "9. Sessions - 9.1 Get Timeouts"  test_get_timeouts
+test "9. Sessions - 9.2 Set Timeouts"  test_set_timeouts
+test "10. Navigation - 10.1 Navigate To" test_navigate_to
+test "10. Navigation - 10.2 Get Current URL" test_get_current_url
+test "10. Navigation - 10.3 Back" test_back
+test "10. Navigation - 10.4 Forward" test_forward
+test "10. Navigation - 10.5 Refresh" test_refresh
+test "10. Navigation - 10.6 Get Title" test_get_title
+test "11. Contexts - 11.1 Get Window Handle" test_get_window_handle
+test "11. Contexts - 11.2 Close Window" test_close_window
+create_session
+test "11. Contexts - 11.3 Switch To Window" test_switch_to_window
+test "11. Contexts - 11.4 Get Window Handles" test_get_window_handles
+test "11. Contexts - 11.5 New Window" test_new_window
+test "11. Contexts - 11.6 Switch To Frame" test_switch_to_frame
+test "11. Contexts - 11.7 Switch To Parent Frame" test_switch_to_parent_frame
+test "11. Contexts - 11.8.1 Get Window Rect" test_get_window_rect
+test "11. Contexts - 11.8.2 Set Window Rect" test_set_window_rect
+test "11. Contexts - 11.8.3 Maximize Window" test_maximize_window
+test "11. Contexts - 11.8.4 Minimize Window" test_minimize_window
+test "11. Contexts - 11.8.5 Fullscreen Window" test_fullscreen_window
+test "12. Elements - 12.3.2 Find Element" test_find_element
+test "12. Elements - 12.3.3 Find Elements" test_find_elements
+test "12. Elements - 12.3.4 Find Element From Element" test_find_element_from_element
+test "12. Elements - 12.3.5 Find Elements From Element" test_find_elements_from_element
+test "12. Elements - 12.3.6 Find Element From Shadow Root" test_find_element_from_shadow_root
+test "12. Elements - 12.3.7 Find Elements From Shadow Root" test_find_elements_from_shadow_root
+test "12. Elements - 12.3.8 Get Active Element" test_get_active_element
+test "12. Elements - 12.4.1 Is Element Selected" test_is_element_selected
+test "12. Elements - 12.4.2 Get Element Attribute" test_get_element_attribute
+test "12. Elements - 12.4.3 Get Element Property" test_get_element_property
+test "12. Elements - 12.4.4 Get Element CSS Value" test_get_element_css_value
+test "12. Elements - 12.4.5 Get Element Text" test_get_element_text
+test "12. Elements - 12.4.6 Get Element Tag Name" test_get_element_tag_name
+test "12. Elements - 12.4.7 Get Element Rect" test_get_element_rect
+test "12. Elements - 12.4.8 Is Element Enabled" test_is_element_enabled
+test "12. Elements - 12.4.9 Get Computed Role" test_get_computed_role
+test "12. Elements - 12.4.10 Get Computed Label" test_get_computed_label
+test "12. Elements - 12.5.1 Element Click" test_element_click
+test "12. Elements - 12.5.2 Element Clear" test_element_clear
+test "12. Elements - 12.5.3 Element Send Keys" test_element_send_keys
+test "13. Document - 13.1 Get Page Source" test_get_page_source
+test "13. Document - 13.2.1 Execute Script" test_execute_script
+test "13. Document - 13.2.2 Execute Async Script" test_execute_async_script
+test "14. Cookies - 14.1 Get All Cookies" test_get_all_cookies
+test "14. Cookies - 14.2 Get Named Cookie" test_get_named_cookie
+test "14. Cookies - 14.3 Add Cookie" test_add_cookie
 test "15. Actions - 15.7 Perform Actions" test_perform_actions
 test "15. Actions - 15.8 Release Actions" test_release_actions
+test "16. User prompts - 16.2 Dismiss Alert" test_dismiss_alert
+test "16. User prompts - 16.3 Accept Alert" test_accept_alert
+test "16. User prompts - 16.5 Get Alert Text" test_get_alert_text
+test "16. User prompts - 16.5 Send Alert Text" test_send_alert_text
 
 
 
