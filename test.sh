@@ -1,11 +1,12 @@
 #!/usr/bin/env sh
 
-# ./check.sh
+./check.sh
 
 . ./webdriver-client.sh
 
 # Kill existing instances
-ps -aux | grep gecko | grep "\--port 4444" | awk '{print $2}' | xargs kill > /dev/null 2>&1
+pkill -f "geckodriver.*--port 4444"
+
 # create new instance
 geckodriver --port 4444 > /dev/null 2>&1 &
 webdriver_pid=$!
@@ -29,7 +30,8 @@ trap cleanup EXIT INT TERM
 
 pause() {
     echo "PAUSED: press enter to continue the test"
-    read
+    read -r input 
+    echo "$input" > /dev/null
 }
 
 while true; do
@@ -443,9 +445,7 @@ test_get_all_cookies() {
 
 test_get_named_cookie() {
     response=$(add_cookie http://localhost:4444 "$session_id" '{"cookie":{"name":"foo","value":"bar"}}')
-    echo $response
     response=$(get_named_cookie http://localhost:4444 "$session_id" "foo")
-    echo $response
     value=$(echo "$response" | sed 's/.*"value":\[\(.*\)\].*/\1/g')
 
     [ "$value" = "" ]
@@ -453,7 +453,6 @@ test_get_named_cookie() {
 
 test_add_cookie() {
     response=$(add_cookie http://localhost:4444 "$session_id" '{"cookie":{"name":"foo","value":"bar","path":"/","secure":false,"httpOnly":false}}')
-    echo $response
     value=$(echo "$response" | sed 's/.*"value":\[\(.*\)\].*/\1/g')
 
     [ "$value" = "" ]
