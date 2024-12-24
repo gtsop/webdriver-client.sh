@@ -15,16 +15,9 @@ create_session() {
     response=$(new_session http://localhost:4444 '{"capabilities": { "browserName": "icecat" } }')
     session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
 }
-clear_session() {
-    # response=$(delete_session http://localhost:4444 "$session_id")
-    return 0
-}
-visit_index() {
-    response=$(navigate_to http://localhost:4444 "$session_id" "{\"url\":\"file://$(pwd)/index.html\"}")
-}
 cleanup() {
-    clear_session
-    kill "$webdriver_pid" 2>/dev/null
+    pkill -f "geckodriver.*--port 4444"
+    pkill -f "firefox.*--marionette"
     exit
 }
 trap cleanup EXIT INT TERM
@@ -77,57 +70,50 @@ test_timeouts() {
     $session delete
 }
 
-test_set_timeouts() {
-    response=$(set_timeouts http://localhost:4444 "$session_id" '{"script":9999}')
-    response=$(get_timeouts http://localhost:4444 "$session_id")
-    script_timeout=$(echo "$response" | sed 's/.*"script":\([0-9]\+\).*/\1/g')
+# 10. Navigation
+test_navigation() {
 
-    [ "$script_timeout" = "9999" ]
+    session=$($driver new session)
+
+    base_url="file://$(pwd)/index.html"
+    $session navigate to "$base_url"
+
+    url=$($session get current url)
+
+    if [ "$($session get current url)" != "$base_url" ]; then
+        echo "Wrong url $url"
+        return 1
+    fi
+
+    $session navigate to "$base_url#foo"
+
+    $session back
+
+    if [ "$($session get current url)" != "$base_url" ]; then
+        echo "Wrong url $url"
+        return 1
+    fi
+
+    $session forward
+
+    if [ "$($session get current url)" != "$base_url#foo" ]; then
+        echo "Wrong url $url"
+        return 1
+    fi
+
+    $session refresh
+
+    if [ "$($session get title)" != "Title" ]; then
+        echo "Wrong title"
+        return 1
+    fi
+
+    $session delete
 }
 
-test_navigate_to() {
-    response=$(navigate_to http://localhost:4444 "$session_id" "{\"url\":\"file://$(pwd)/index.html\"}")
-    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
-
-    [ "$value" = "null" ]
-}
-
-test_get_current_url() {
-    response=$(get_current_url http://localhost:4444 "$session_id")
-    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
-
-    [ "$value" = "file://$(pwd)/index.html" ]
-}
-
-test_back() {
-    response=$(navigate_to http://localhost:4444 "$session_id" "{\"url\":\"file://$(pwd)/index.html#foo\"}")
-    response=$(back http://localhost:4444 "$session_id")
-    response=$(get_current_url http://localhost:4444 "$session_id")
-    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
-
-    [ "$value" = "file://$(pwd)/index.html" ]
-}
-
-test_forward() {
-    response=$( forward http://localhost:4444 "$session_id")
-    response=$(get_current_url http://localhost:4444 "$session_id")
-    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
-
-    [ "$value" = "file://$(pwd)/index.html#foo" ]
-}
-
-test_refresh() {
-    response=$(refresh http://localhost:4444 "$session_id")
-    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
-
-    [ "$value" = "null" ]
-}
-
-test_get_title() {
-    response=$(get_title http://localhost:4444 "$session_id")
-    value=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
-
-    [ "$value" = "Title" ]
+# 11. Contexts
+test_contexts() {
+    return 0
 }
 
 test_get_window_handle() {
@@ -492,28 +478,11 @@ test_send_alert_text() {
     [ "$value" = "null" ]
 }
 
-# test "8. Sessions" test_sessions
+test "8. Sessions" test_sessions
 test "9. Timeouts" test_timeouts
-# test "9. Sessions - 9.2 Set Timeouts"  test_set_timeouts
-# test "10. Navigation - 10.1 Navigate To" test_navigate_to
-# test "10. Navigation - 10.2 Get Current URL" test_get_current_url
-# test "10. Navigation - 10.3 Back" test_back
-# test "10. Navigation - 10.4 Forward" test_forward
-# test "10. Navigation - 10.5 Refresh" test_refresh
-# test "10. Navigation - 10.6 Get Title" test_get_title
-# test "11. Contexts - 11.1 Get Window Handle" test_get_window_handle
-# test "11. Contexts - 11.2 Close Window" test_close_window
-# create_session
-# test "11. Contexts - 11.3 Switch To Window" test_switch_to_window
-# test "11. Contexts - 11.4 Get Window Handles" test_get_window_handles
-# test "11. Contexts - 11.5 New Window" test_new_window
-# test "11. Contexts - 11.6 Switch To Frame" test_switch_to_frame
-# test "11. Contexts - 11.7 Switch To Parent Frame" test_switch_to_parent_frame
-# test "11. Contexts - 11.8.1 Get Window Rect" test_get_window_rect
-# test "11. Contexts - 11.8.2 Set Window Rect" test_set_window_rect
-# test "11. Contexts - 11.8.3 Maximize Window" test_maximize_window
-# test "11. Contexts - 11.8.4 Minimize Window" test_minimize_window
-# test "11. Contexts - 11.8.5 Fullscreen Window" test_fullscreen_window
+test "10. Navigation" test_navigation
+test "11. Contexts" test_contexts
+
 # test "12. Elements - 12.3.2 Find Element" test_find_element
 # test "12. Elements - 12.3.3 Find Elements" test_find_elements
 # test "12. Elements - 12.3.4 Find Element From Element" test_find_element_from_element

@@ -650,6 +650,19 @@ webdriver_session() {
         webdriver_session_set_timeout "$webdriver_url" "$session_id" "$@"
     elif [ "$action $2" = "get timeout" ]; then
         webdriver_session_get_timeout "$webdriver_url" "$session_id" "$@"
+    elif [ "$action $1" = "navigate to" ]; then
+        shift;
+        webdriver_session_navigate_to "$webdriver_url" "$session_id" "$@"
+    elif [ "$action $1 $2" = "get current url" ]; then
+        webdriver_session_get_current_url "$webdriver_url" "$session_id"
+    elif [ "$action" = "back" ]; then
+        webdriver_session_back "$webdriver_url" "$session_id"
+    elif [ "$action" = "forward" ]; then
+        webdriver_session_forward "$webdriver_url" "$session_id"
+    elif [ "$action" = "refresh" ]; then
+        webdriver_session_refresh "$webdriver_url" "$session_id"
+    elif [ "$action $1" = "get title" ]; then
+        webdriver_session_get_title "$webdriver_url" "$session_id"
     fi   
 }
 
@@ -684,4 +697,65 @@ webdriver_session_get_timeout() {
     timeout=$(echo "$response" | sed "s/.*\"$timeout_name\":\([0-9]\+\).*/\1/g")
 
     echo "$timeout"
+}
+
+webdriver_session_navigate_to() {
+    webdriver_url="$1"; shift;
+    session_id="$1"; shift;
+    url="$1";
+
+    response=$(navigate_to "$webdriver_url" "$session_id" "{\"url\":\"$url\"}")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_get_current_url() {
+    webdriver_url="$1"; 
+    session_id="$2"; 
+
+    response=$(get_current_url "$webdriver_url" "$session_id")
+    url=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    echo "$url"
+}
+
+webdriver_session_back() {
+    webdriver_url="$1"; 
+    session_id="$2"; 
+
+    response=$(back "$webdriver_url" "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_forward() {
+    webdriver_url="$1"; 
+    session_id="$2"; 
+
+    response=$(forward "$webdriver_url" "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_refresh() {
+    webdriver_url="$1"; 
+    session_id="$2"; 
+
+    response=$(refresh "$webdriver_url" "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_get_title() {
+    webdriver_url="$1"; 
+    session_id="$2"; 
+
+    response=$(get_title "$webdriver_url" "$session_id")
+    title=$(echo "$response" | sed 's/.*"value":"\(.[^"]*\)".*/\1/g')
+
+    echo "$title"
 }
