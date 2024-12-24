@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 cd "$(dirname "$0")" || exit 1
 
+. ../spec/test-utils.sh
 . ../src/webdriver-client.sh
 
 # Kill existing instances
@@ -41,22 +42,7 @@ while true; do
     fi
     sleep 1
 done
-test() {
-    title="$1"
-    test_case="$2"
 
-    printf "%s" "[TEST] $title "
-
-    $test_case
-
-    result=$?
-
-    if [ "$result" = "0" ]; then
-        printf "[PASS]\n"
-    else
-        printf "[FAIL]\n"
-    fi
-}
 
 ######################################################################
 

@@ -22,7 +22,7 @@ http_wget_catch_error() {
 http_delete() {
     url=$1
 
-    wget -q -O - --method=delete "$url"
+    wget -q --content-on-error --user-agent="" -O - --method=delete "$url"
 
     http_wget_catch_error "$url" "DELETE" "$?"
 }
@@ -30,7 +30,7 @@ http_delete() {
 http_get() {
     url=$1
 
-    wget -q -O - "$url"
+    wget -q --content-on-error --user-agent="" -O - "$url"
 
     http_wget_catch_error "$url" "GET" "$?"
 }
@@ -43,7 +43,7 @@ http_post() {
         data="{}"
     fi
 
-    wget -q --content-on-error -O - --header="Content-Type: application/json" --post-data="$data" "$url"
+    wget -q --content-on-error --user-agent="" -O - --header="Content-Type: application/json" --post-data="$data" "$url"
 
     http_wget_catch_error "$url" "POST" "$?"
 }
