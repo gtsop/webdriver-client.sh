@@ -1,5 +1,15 @@
 #!/usr/bin/env sh
 
+assert_equal() {
+  actual="$1"
+  expected="$2"
+
+  if [ "$actual" != "$expected" ]; then
+    return 1
+  fi
+  return 0
+}
+
 http_wget_catch_error() {
     # Wget exit status codes manual:
     # https://www.gnu.org/software/wget/manual/html_node/Exit-Status.html
@@ -595,4 +605,83 @@ send_alert_text() {
     payload=$3;
 
     http_post "$endpoint_url"/session/"$session_id"/alert/text "$payload"
+}
+
+webdriver() {
+    webdriver_url="$1"; shift;
+    action="$1"; shift;
+
+    if [ "$action" = "is-ready" ]; then
+        webdriver_status "$webdriver_url"
+    elif [ "$action $1" = "new session" ]; then
+        webdriver_new_session "$webdriver_url"
+    elif [ "$action" = "session" ]; then
+        webdriver_session "$webdriver_url" "$@"
+    fi
+}
+
+webdriver_status() {
+    webdriver_url="$1"
+
+    response=$(status "$webdriver_url")
+
+    is_ready=$(echo "$response" | sed 's/.*"ready":\(true\|false\).*/\1/g')
+
+    assert_equal $is_ready "true"
+}
+
+webdriver_new_session() {
+    webdriver_url="$1"
+
+    response=$(new_session "$webdriver_url" '{"capabilities":{"browserName":"icecat"}}')
+    session_id=$(echo "$response" | sed 's/.*"sessionId":"\(.[^"]*\)".*/\1/g')
+
+    echo "webdriver $webdriver_url session $session_id"
+}
+
+webdriver_session() {
+    webdriver_url="$1"; shift;
+    session_id="$1"; shift;
+    action="$1"; shift;
+
+    if [ "$action" = "delete" ]; then
+        webdriver_session_delete "$webdriver_url" "$session_id"
+    elif [ "$action $2" = "set timeout" ]; then
+        webdriver_session_set_timeout "$webdriver_url" "$session_id" "$@"
+    elif [ "$action $2" = "get timeout" ]; then
+        webdriver_session_get_timeout "$webdriver_url" "$session_id" "$@"
+    fi   
+}
+
+webdriver_session_delete() {
+    webdriver_url="$1"; shift;
+    session_id="$1"; shift;
+
+    response=$(delete_session "$webdriver_url" "$session_id")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_set_timeout() {
+    webdriver_url="$1"; shift;
+    session_id="$1"; shift;
+    timeout_name="$1"; shift; shift; shift;
+    timeout_value="$1";
+
+    response=$(set_timeouts "$webdriver_url" "$session_id" "{\"$timeout_name\":$timeout_value}")
+    value=$(echo "$response" | sed 's/.*"value":\(null\).*/\1/g')
+
+    assert_equal "$value" "null"
+}
+
+webdriver_session_get_timeout() {
+    webdriver_url="$1"; shift;
+    session_id="$1"; shift;
+    timeout_name="$1"; 
+
+    response=$(get_timeouts "$webdriver_url" "$session_id")
+    timeout=$(echo "$response" | sed "s/.*\"$timeout_name\":\([0-9]\+\).*/\1/g")
+
+    echo "$timeout"
 }
