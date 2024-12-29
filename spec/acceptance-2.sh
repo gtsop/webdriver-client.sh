@@ -482,7 +482,6 @@ test "8. Sessions" test_sessions
 test "9. Timeouts" test_timeouts
 test "10. Navigation" test_navigation
 test "11. Contexts" test_contexts
-
 # test "12. Elements - 12.3.2 Find Element" test_find_element
 # test "12. Elements - 12.3.3 Find Elements" test_find_elements
 # test "12. Elements - 12.3.4 Find Element From Element" test_find_element_from_element
@@ -515,5 +514,3 @@ test "11. Contexts" test_contexts
 # test "16. User prompts - 16.3 Accept Alert" test_accept_alert
 # test "16. User prompts - 16.5 Get Alert Text" test_get_alert_text
 # test "16. User prompts - 16.5 Send Alert Text" test_send_alert_text
-# 
-# 
